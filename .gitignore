@@ -1,0 +1,4 @@
+cone.fits*
+__pycache__/
+static/artificial.fits
+static/fitspng.png
