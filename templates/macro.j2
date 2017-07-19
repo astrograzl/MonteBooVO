@@ -1,0 +1,34 @@
+{% macro field(input, value='', text='', cols=6) %}
+<div class="col-sm-{{ cols }} form-group">
+  <div class="input-group">
+    <span class="input-group-addon">{{ input.label }}</span>
+
+    {% if input.type == "RadioField" %}
+
+      <span class="form-control text-center">
+      {% for radio in input %}
+        {{ radio.label(style='margin-left: 2em;') }}
+        {% if value == input.name|upper %}
+          {{ radio(default=checked) }}
+        {% else %}
+          {{ radio }}
+        {% endif %}
+      {% endfor %}
+      </span>
+
+    {% elif input.type == "BooleanField" %}
+
+      <span class="form-control text-center">
+        {% if value %}{{ input(default=checked) }}{% else %}{{ input }}{% endif %}
+      </span>
+
+    {% else %}
+
+      {{ input(class_="form-control", value=value) }}
+
+    {% endif %}
+
+    {% if text %}<span class="input-group-addon"><i>{{ text }}</i></span>{% endif %}
+  </div>
+</div>
+{% endmacro %}

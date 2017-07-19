@@ -1,0 +1,42 @@
+{% from "macro.j2" import field %}
+{% extends "basic.html" %}
+{% block content %}
+
+<header class="page-header">
+<h2>Setup</h2>
+</header>
+
+<form method="POST">
+
+{% for item in form %}
+{% if item != form.csrf_token %}
+  {% if (loop.index % 2 == 1 and loop.index not in [23, 25]) or loop.index == 24 %}<div class="row">{% endif %}
+    {% if loop.index in [21, 22, 23] %}
+      {{ field(item, value=value[item.name], text=text[item.name], cols=4) }}
+    {% else %}
+      {{ field(item, value=value[item.name], text=text[item.name]) }}
+    {% endif %}
+  {% if (loop.index % 2 == 0 and loop.index not in [22, 24]) or loop.index in [23, 25] %}</div>{% endif %}
+{% else %}
+  {{ item }}
+{% endif %}
+{% endfor %}
+
+<div class="row"><!-- 13 -->
+  <div class="col-sm-6 text-right">
+    <a href="/setup/reset" class="btn btn-danger">
+      <span class="glyphicon glyphicon-remove"> Reset</span>
+    </a>
+  </div>
+  <div class="col-sm-6 text-left"><!-- 13.B -->
+    <button type="submit" class="btn btn-success">
+      <span class="glyphicon glyphicon-ok"> Save</span>
+    </button>
+  </div>
+</div>
+
+</form>
+
+<pre>{{ form }}</pre>
+<pre>{{ value }}</pre>
+{% endblock %}

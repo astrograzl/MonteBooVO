@@ -3,12 +3,14 @@
 # @uthor: janak
 """MonteBoo Virtual Observatory & Munipack Artificial Sky"""
 
+
 import os
 import subprocess as sub
 from string import capwords
 from astropy import units as u
 from flask import Flask, flash, session, request, redirect, render_template
 from monte import coordination, catalogue, artificial, fitspng
+from wtform import MyForm, Struct, text
 
 
 app = Flask(__name__)
@@ -73,31 +75,33 @@ def result():
 @app.route("/setup", methods=["GET", "POST"])
 def setup():
     """Setup page with options configuration"""
+    form = MyForm()
     if request.method == "POST":
-        session["setup"] = request.form
-        session["setin"] = 0
-        for k in request.form.keys():
-            if request.form[k]:
-                session["setin"] += 1
-        if request.form["psf"] == "SEEING":
-            session["setin"] -= 1
-        if request.form["spread"] == "FFT":
-            session["setin"] -= 1
+        setin = -1
+        setup = request.form.to_dict()
+        # value = request.form.populate_obj()
+        for field in setup:
+           if setup[field]:
+               setin += 1
+        if "psf" in setup and setup["psf"] == "SEEING":
+            setin -= 1
+        if "spread" in setup and setup["spread"] == "FFT":
+            setin -= 1
+        session["setin"] = setin
+        session["setup"] = setup
         session["reset"] = True
         session.modified = True
-        flash("Saved the settings. Now go and check the new image.")
-    form = session.get("setup", {})
-    return render_template("setup.html", form=form)
+    value = session.get("setup", {})
+    return render_template("wtform.html", form=form, value=value, text=text)
 
 
 @app.route("/setup/reset")
 def reset():
     """Setup page after reseting settings"""
-    session["setin"] = 0
+    session["setin"] = -1
     session["setup"] = {}
     session["reset"] = True
     session.modified = True
-    flash("Reset settings to their default values.")
     return redirect("/setup")
 
 
