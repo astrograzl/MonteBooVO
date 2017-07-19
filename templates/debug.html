@@ -1,0 +1,49 @@
+{% extends "basic.html" %}
+{% block content %}
+
+<header class="page-header">
+  <h2>Verbose debug output</h2>
+</header>
+
+<p class="alert alert-danger text-center">
+  If you are in ugly trouble, call <em>The Doctor</em>!<br>
+  {% if err %}<code>{{ err }}</code>{% endif %}
+</p>
+
+<section>
+  <h3>Cone search</h3>
+  <p>
+    <b><code>{{ session.cat.retcode }}</b></code>
+    <code>{{ session.cat.args }}</code>
+  </p>
+  <pre>{{ session.cat.stdout }}</pre>
+</section>
+
+<section>
+  <h3>Artificial sky</h3>
+  <p>
+    <b><code>{{ session.art.retcode }}</b></code>
+    <code>{{ session.art.args|join(' ') }}</code>
+  </p>
+  <pre>{{ session.art.stdout }}</pre>
+</section>
+
+<section>
+  <h3>Config</h3>
+  {% for item in session.get('setup', {}) %}
+    <code>{{ item }}: {{ session['setup'][item] }}</code><br>
+  {% endfor %}
+</section>
+
+<section>
+  <h3>Data</h3>
+  {% for item in session.get('data', {}) %}
+    <code>{{ item }}: {{ session['data'][item] }}</code><br>
+  {% endfor %}
+</section>
+
+{% endblock content %}
+
+{% block back %}
+<div style="background: url('/static/matrix.jpg') no-repeat fixed center bottom; height: 300px;"></div>
+{% endblock back %}

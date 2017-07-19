@@ -2,40 +2,46 @@
 {% block content %}
 
 <header class="page-header">
-<div class="jumbotron">
-<h1>MonteBoo <small>Virtual Observatory</small></h1>
-<h2>Munipack Artificial Sky</h2>
-<p><form action="result" method="POST">
-<input name="object" type="search" placeholder="Search for object in Simbad database" class="form-control" autofocus>
-</form></p>
-<p class="lead">You can search in astronomy database <a href="http://simbad.u-strasbg.fr/simbad/">Simbad</a> directly using object name like <code>M&nbsp;31</code> (<em>Andromeda Galaxy</em>), and/or using equatorial celestial coordinate system <em>right ascension</em> and <em>declination</em>. They can be written in decimal degrees <code>10.625&nbsp;41.2</code>, and sexagesimal values <code>00&nbsp;42&nbsp;30&nbsp;+41&nbsp;12&nbsp;00</code>.</p>
-</div>
+  <div class="jumbotron">
+    <h1>MonteBoo <small>Virtual Observatory</small></h1>
+    <h2>Munipack Artificial Sky</h2>
+    <p><form action="result" method="POST">
+      <input name="object" type="search" placeholder="Search for object in Simbad database by they name or coordination, try lucky and be patient please..." class="form-control" autofocus>
+      <input name="search" type="hidden" value="object">
+    </form></p>
+    <p class="lead">You can search in astronomy database
+      <a href="http://simbad.u-strasbg.fr/simbad/">Simbad</a>
+      directly using object name like <code>M&nbsp;31</code>
+      (<em>Andromeda Galaxy</em>), and/or using equatorial celestial coordinate
+      system <em>right ascension</em> and <em>declination</em>.
+      They can be written in decimal degrees <code>10.625&nbsp;41.2</code>,
+      and sexagesimal values <code>00&nbsp;42&nbsp;30&nbsp;+41&nbsp;12&nbsp;00</code>.
+    </p>
+  </div>
 </header>
 
 <div class="row">
-<div class="col-sm-4">
-<figure class="thumbnail"><img src="/static/bllac.png">
-<figcaption class="caption">
-<h3>Bl Lac <small>Chaotic Blazar in Lacerta</small></h3>
-</figcaption>
-</figure>
-</div>
-
-<div class="col-sm-4">
-<figure class="thumbnail"><img src="/static/ngc869.png">
-<figcaption class="caption">
-<h3>NGC 869 <small>Open cluster in Perseus</small></h3>
-</figcaption>
-</figure>
-</div>
-
-<div class="col-sm-4">
-<figure class="thumbnail"><img src="/static/m13.png">
-<figcaption class="caption">
-<h3>M 13 <small>Globular cluster in Hercules</small></h3>
-</figcaption>
-</figure>
-</div>
+  <div class="col-sm-4">
+    <figure class="thumbnail"><img src="/static/bllac.png">
+      <figcaption class="caption">
+        <h3>Bl Lac <small>Chaotic Blazar in Lacerta</small></h3>
+      </figcaption>
+    </figure>
+  </div>
+  <div class="col-sm-4">
+    <figure class="thumbnail"><img src="/static/ngc869.png">
+      <figcaption class="caption">
+        <h3>NGC 869 <small>Open cluster in Perseus</small></h3>
+      </figcaption>
+    </figure>
+  </div>
+  <div class="col-sm-4">
+    <figure class="thumbnail"><img src="/static/m13.png">
+      <figcaption class="caption">
+        <h3>M 13 <small>Globular cluster in Hercules</small></h3>
+      </figcaption>
+    </figure>
+  </div>
 </div>
 
 {% endblock %}
