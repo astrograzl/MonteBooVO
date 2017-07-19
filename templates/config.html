@@ -1,0 +1,37 @@
+{% from "macro.j2" import field %}
+{% extends "basic.html" %}
+{% block content %}
+
+<header class="page-header">
+  <h2>Configuration</h2>
+</header>
+
+<form method="POST">
+
+{% for item in default %}
+  {% if (loop.index % 2 == 1 and loop.index not in [23, 25]) or loop.index == 24 %}<div class="row">{% endif %}
+    {% if loop.index in [21, 22, 23] %}
+      {{ field(item, label=default[item]['label'], value=form[item], place=default[item]['place'], text=default[item]['text'], cols=4) }}
+    {% else %}
+      {{ field(item, label=default[item]['label'], value=form[item], place=default[item]['place'], text=default[item]['text']) }}
+    {% endif %}
+  {% if (loop.index % 2 == 0 and loop.index not in [22, 24]) or loop.index in [23, 25] %}</div>{% endif %}
+{% endfor %}
+
+<div class="row">
+  <div class="col-sm-6 text-right">
+    <a href="/config/reset" class="btn btn-danger">
+      <span class="glyphicon glyphicon-remove"> Reset</span>
+    </a>
+  </div>
+  <div class="col-sm-6 text-left">
+    <button type="submit" class="btn btn-success">
+      <span class="glyphicon glyphicon-ok"> Save</span>
+    </button>
+  </div>
+  <input name="token" id="token" type="hidden" value="{{ token }}">
+</div>
+
+</form>
+
+{% endblock %}
