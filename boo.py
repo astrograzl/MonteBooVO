@@ -3,14 +3,9 @@
 """MonteBoo Virtual Observatory & Munipack Artificial Sky"""
 
 
-import subprocess as sub
-from string import capwords
 from secrets import token_urlsafe
-from astropy import units as u
-from astropy.coordinates import SkyCoord
-from flask import Flask, flash, session, request, redirect, render_template
-from monte import coordination, catalogue, artificial, fitspng, default
-
+from flask import Flask, flash, session, redirect, render_template
+import monte
 
 app = Flask(__name__)
 app.secret_key = token_urlsafe(24)
@@ -28,102 +23,25 @@ def index():
 @app.route("/about")
 def about():
     """About page with version information"""
-    subs = {"shell": True, "stdout": sub.PIPE, "universal_newlines": True}
-    muni = sub.run("munipack --version", **subs)
-    fits = sub.run("fitspng --version", **subs)
-    data = {"muni": muni.stdout, "fits": fits.stdout}
-    return render_template("about.html", content=data)
+    return monte.about()
 
 
 @app.route("/result", methods=["GET", "POST"])
 def result():
     """Result page with artificial frame"""
-    if request.method == "POST":
-        if request.form["type"] == "search":  # search widget
-            search = True
-            click = False
-            name = request.form["name"]
-
-            coor = coordination(name)
-            if coor is None:
-                flash("Can't find required object. Please try another one.")
-                return redirect("/index")
-
-            session["cat"] = catalogue(coor)
-            session.modified = True
-            if session["cat"]["retcode"] != 0:
-                flash("This is really bad :-( " +
-                      "Looks like zombies shutdown the server.")
-                return redirect("/index")
-
-        elif request.form["type"] == "button":  # click on button
-            click = True
-            search = False
-            ra = session["data"]["ra"]["deg"]
-            dec = session["data"]["dec"]["deg"]
-            name = session["data"]["name"]
-            coor = SkyCoord(ra=ra, dec=dec, unit=u.degree)
-
-        if search or (click and session.get("reset", False)):
-            session["art"] = artificial(coor, session.get("config", {}))
-            session["reset"] = False
-            session.modified = True
-
-        imname, finame = fitspng()  # always reload saved image
-
-        # update stored data in session
-        data = {"name": capwords(name),
-                "ra": {"deg": coor.ra.deg,
-                       "str": coor.ra.to_string(unit=u.hourangle, sep=":")},
-                "dec": {"deg": coor.dec.deg,
-                        "str": coor.dec.to_string(unit=u.degree, sep=":")},
-                "img": imname,
-                "fit": finame}
-        session["data"] = data
-        session.modified = True
-
-        return render_template("result.html", data=data)
-
-    if request.method == "GET":
-        data = session.get("data", {})
-        if data.get("name", False):
-            return render_template("result.html", data=data)
-        return redirect("/index")
+    return monte.result()
 
 
 @app.route("/config", methods=["GET", "POST"])
 def config():
     """Setup parameters with options configuration"""
-    if not session.get("config", False):
-        session["config"] = {}
-    if request.method == "POST":
-        setin = 0
-        setup = request.form.to_dict()
-        del setup["token"]
-        for field in setup:
-            if setup[field]:
-                setin += 1
-        if "psf" in setup and setup["psf"] == "SEEING":
-            setin -= 1
-        if "spread" in setup and setup["spread"] == "FFT":
-            setin -= 1
-        session["setin"] = setin
-        session["config"] = setup
-        session["reset"] = True
-        session.modified = True
-    form = session.get("config", {})
-    return render_template("config.html", form=form, default=default,
-                           token=token_urlsafe(32))
+    return monte.config()
 
 
 @app.route("/config/reset")
 def reset():
     """Setup page after reseting settings"""
-    session["setin"] = 0
-    session["config"] = {}
-    session["reset"] = True
-    session.modified = True
-    return redirect("/config")
+    return monte.reset()
 
 
 @app.errorhandler(Exception)

@@ -1,4 +1,5 @@
 cone.fits*
 __pycache__/
+monte/__pychache__/
 static/artificial.fits
 static/fitspng.png
