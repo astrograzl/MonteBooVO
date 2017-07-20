@@ -1,10 +1,11 @@
 {% from "macro.j2" import field %}
 {% extends "basic.html" %}
-{% block content %}
 
-<header class="page-header">
-  <h2>Configuration</h2>
-</header>
+{% block head %}
+<h2>Configuration</h2>
+{% endblock head %}
+
+{% block content %}
 
 <form method="POST">
 
@@ -34,4 +35,4 @@
 
 </form>
 
-{% endblock %}
+{% endblock content %}

@@ -11,8 +11,8 @@ from astropy.coordinates.name_resolve import NameResolveError
 
 
 default = {
-    "psf": {"label": "Point spread function", "place": "", "text": "seeing"},
-    "spread": {"label": "Seeing spread method", "place": "", "text": "fft"},
+    "psf": {"label": "Point spread function", "place": "SEEING", "text": "seeing"},
+    "spread": {"label": "Seeing spread method", "place": "FFT", "text": "fft"},
     "hwhm": {"label": "Half width at half of maximum", "place": "1.00", "text": "pix"},
     "airy": {"label": "Radius of Airy spot", "place": "0.10", "text": "pix"},
     "beta": {"label": "Moffat exponent", "place": "2.00", "text": ""},
@@ -22,7 +22,7 @@ default = {
     "back-grad-x": {"label": "Background gradient in x", "place": "0.0", "text": "cts/pix"},
     "back-grad-y": {"label": "Background gradient in y", "place": "0.0", "text": "cts/pix"},
     "area": {"label": "Area of input aperture", "place": "1.00", "text": "m<sup>2</sup>"},
-    "diameter": {"label": "Diameter of input aperture", "place": "1.1", "text": "m"},
+    "diameter": {"label": "Diameter of input aperture", "place": "", "text": "m"},
     "exptime": {"label": "Exposure time", "place": "1.0", "text": "s"},
     "qeff": {"label": "Quantum efficiency", "place": "1.00", "text": ""},
     "atmosphere": {"label": "Apply atmosphere modelling", "place": "", "text": "extinction, seeing"},
@@ -51,11 +51,10 @@ def coordination(name):
         return coord
 
 
-def catalogue(coord, setup):
+def catalogue(coord):
     """Get catalogue from VO server"""
-    fov = setup.get("fov", default["fov"]["place"])
-    ret = sub.run("munipack cone --verbose --cat=UCAC4 --radius={} -- '{}' '{}'"
-                  .format(fov, coord.ra.deg, coord.dec.deg), shell=True,
+    ret = sub.run("munipack cone --verbose --cat=UCAC4 -r 0.5 -- '{}' '{}'"
+                  .format(coord.ra.deg, coord.dec.deg), shell=True,
                   stdout=sub.PIPE, stderr=sub.STDOUT, universal_newlines=True)
     return {"retcode": ret.returncode, "args": ret.args, "stdout": ret.stdout}
 

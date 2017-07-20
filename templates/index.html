@@ -1,24 +1,25 @@
 {% extends "basic.html" %}
-{% block content %}
 
-<header class="page-header">
-  <div class="jumbotron">
-    <h1>MonteBoo <small>Virtual Observatory</small></h1>
-    <h2>Munipack Artificial Sky</h2>
-    <p><form action="result" method="POST">
-      <input name="object" type="search" placeholder="Search for object in Simbad database by they name or coordination, try lucky and be patient please..." class="form-control" autofocus>
-      <input name="search" type="hidden" value="object">
-    </form></p>
-    <p class="lead">You can search in astronomy database
-      <a href="http://simbad.u-strasbg.fr/simbad/">Simbad</a>
-      directly using object name like <code>M&nbsp;31</code>
-      (<em>Andromeda Galaxy</em>), and/or using equatorial celestial coordinate
-      system <em>right ascension</em> and <em>declination</em>.
-      They can be written in decimal degrees <code>10.625&nbsp;41.2</code>,
-      and sexagesimal values <code>00&nbsp;42&nbsp;30&nbsp;+41&nbsp;12&nbsp;00</code>.
-    </p>
-  </div>
-</header>
+{% block head %}
+<div class="jumbotron">
+  <h1>MonteBoo <small>Virtual Observatory</small></h1>
+  <h2>Munipack Artificial Sky</h2>
+  <p><form action="result" method="POST">
+    <input name="name" type="search" placeholder="Search for object in Simbad database by his name or coordination, try lucky and be patient please..." class="form-control" autofocus>
+    <input name="type" type="hidden" value="search">
+  </form></p>
+  <p class="lead">You can search in astronomy database
+    <a href="http://simbad.u-strasbg.fr/simbad/">Simbad</a>
+    directly using object name like <code>M&nbsp;31</code>
+    (<em>Andromeda Galaxy</em>), and/or using equatorial celestial coordinate
+    system <em>right ascension</em> and <em>declination</em>.
+    They can be written in decimal degrees <code>10.625&nbsp;41.2</code>,
+    and sexagesimal values <code>00&nbsp;42&nbsp;30&nbsp;+41&nbsp;12&nbsp;00</code>.
+  </p>
+</div>
+{% endblock head %}
+
+{% block content %}
 
 <div class="row">
   <div class="col-sm-4">
@@ -44,4 +45,4 @@
   </div>
 </div>
 
-{% endblock %}
+{% endblock content %}

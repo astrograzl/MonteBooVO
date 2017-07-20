@@ -39,40 +39,40 @@ def about():
 def result():
     """Result page with artificial frame"""
     if request.method == "POST":
-        if request.form.get("search", "button") == "object":  # search widget
+        if request.form["type"] == "search":  # search widget
             search = True
             click = False
-            name = request.form["object"]
+            name = request.form["name"]
 
             coor = coordination(name)
             if coor is None:
                 flash("Can't find required object. Please try another one.")
                 return redirect("/index")
 
-        elif request.form.get("button") == "clicked":  # click on button
+            session["cat"] = catalogue(coor)
+            session.modified = True
+            if session["cat"]["retcode"] != 0:
+                flash("This is really bad :-( " +
+                      "Looks like zombies shutdown the server.")
+                return redirect("/index")
+
+        elif request.form["type"] == "button":  # click on button
             click = True
             search = False
             ra = session["data"]["ra"]["deg"]
             dec = session["data"]["dec"]["deg"]
-            name = session["data"]["obj"]
+            name = session["data"]["name"]
             coor = SkyCoord(ra=ra, dec=dec, unit=u.degree)
 
         if search or (click and session.get("reset", False)):
-            if session.get("fov_set", False):
-                session["cat"] = catalogue(coor, session.get("setup", {}))
-                session.modified = True
-                if session["cat"]["retcode"] != 0:
-                    flash("This is really bad :-( " +
-                          "Looks like zombies shutdown the server.")
-                    return redirect("/index")
-            session["art"] = artificial(coor, session.get("setup", {}))
+            session["art"] = artificial(coor, session.get("config", {}))
             session["reset"] = False
             session.modified = True
 
         imname, finame = fitspng()  # always reload saved image
 
         # update stored data in session
-        data = {"obj": capwords(name),
+        data = {"name": capwords(name),
                 "ra": {"deg": coor.ra.deg,
                        "str": coor.ra.to_string(unit=u.hourangle, sep=":")},
                 "dec": {"deg": coor.dec.deg,
@@ -85,8 +85,8 @@ def result():
         return render_template("result.html", data=data)
 
     if request.method == "GET":
-        data = session.get("data", False)
-        if data:
+        data = session.get("data", {})
+        if data.get("name", False):
             return render_template("result.html", data=data)
         return redirect("/index")
 
@@ -94,6 +94,8 @@ def result():
 @app.route("/config", methods=["GET", "POST"])
 def config():
     """Setup parameters with options configuration"""
+    if not session.get("config", False):
+        session["config"] = {}
     if request.method == "POST":
         setin = 0
         setup = request.form.to_dict()
@@ -105,15 +107,11 @@ def config():
             setin -= 1
         if "spread" in setup and setup["spread"] == "FFT":
             setin -= 1
-        fov_old = session.get("setup", {}).get("fov", "")
-        fov_new = setup.get("fov", "")
-        if fov_new != fov_old:
-            session["fov_set"] = True
         session["setin"] = setin
-        session["setup"] = setup
+        session["config"] = setup
         session["reset"] = True
         session.modified = True
-    form = session.get("setup", {})
+    form = session.get("config", {})
     return render_template("config.html", form=form, default=default,
                            token=token_urlsafe(32))
 
@@ -122,23 +120,31 @@ def config():
 def reset():
     """Setup page after reseting settings"""
     session["setin"] = 0
-    session["setup"] = {}
+    session["config"] = {}
     session["reset"] = True
     session.modified = True
     return redirect("/config")
 
 
-@app.errorhandler(404)
+@app.errorhandler(Exception)
 def error(err):
+    """Do not panic"""
+    flash(err)
+    return render_template("error.html")
+
+
+@app.errorhandler(404)
+def notfound(err):
     """Page Not Found"""
     flash(err)
-    return render_template("error.html"), 404
+    return render_template("notfound.html"), 404
 
 
 @app.route("/debug")
 def debug():
     """Show verbose debug output"""
-    if session.get("data", False):
+    data = session.get("data", {})
+    if data.get("name", False):
         return render_template("debug.html", session=session)
     return redirect("/index")
 

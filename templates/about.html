@@ -1,9 +1,10 @@
 {% extends "basic.html" %}
-{% block content %}
 
-<header class="page-header">
+{% block head %}
 <h2>About</h2>
-</header>
+{% endblock head %}
+
+{% block content %}
 
 <section>
 <h3>MonteBoo <small>Virtual Observatory</small></h3>
@@ -76,4 +77,4 @@
   https://heasarc.gsfc.nasa.gov/fitsio/
 </a></p>
 </section>
-{% endblock %}
+{% endblock content %}
