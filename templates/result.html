@@ -1,25 +1,27 @@
 {% extends "basic.html" %}
-{% block content %}
 
-<header class="page-header text-center">
-  <h3>{{ data.obj }}</h3>
-  <form class="form-inline">
-    <div class="form-group">
-      <div class="input-group">
-        <span class="input-group-addon"><b>α</b></span>
-        <input type="text" value="{{ data.ra.str }}" class="form-control" readonly>
-        <span class="input-group-addon"><i>hms</i></span>
-      </div>
-      &emsp;
-      <div class="input-group">
-        <span class="input-group-addon"><b>δ</b></span>
-        <input type="text" value="{{ data.dec.str }}" class="form-control" readonly>
-        <span class="input-group-addon"><i>dms</i></span>
-      </div>
+{% block head %}
+<div class="text-center">
+<h2>{{ data.name }}</h2>
+<form class="form-inline">
+  <div class="form-group">
+    <div class="input-group">
+      <span class="input-group-addon"><b>α</b></span>
+      <input type="text" value="{{ data.ra.str }}" class="form-control" readonly>
+      <span class="input-group-addon"><i>hms</i></span>
     </div>
-  </form>
-</header>
+    &emsp;
+    <div class="input-group">
+      <span class="input-group-addon"><b>δ</b></span>
+      <input type="text" value="{{ data.dec.str }}" class="form-control" readonly>
+      <span class="input-group-addon"><i>dms</i></span>
+    </div>
+  </div>
+</form>
+</div>
+{% endblock head %}
 
+{% block content %}
 <figure class="text-center"><img src="{{ data.img }}">
   <figcaption>
     <br>
@@ -28,5 +30,4 @@
     </a>
   </figcaption>
 </figure>
-
-{% endblock %}
+{% endblock content %}

@@ -3,16 +3,13 @@
 """MonteBoo Virtual Observatory & Munipack Artificial Sky"""
 
 
-import os
-import subprocess as sub
-from time import time, strftime
-from astropy.coordinates import SkyCoord
-from astropy.coordinates.name_resolve import NameResolveError
+from secrets import token_urlsafe
+from flask import request, session, redirect, render_template
 
 
-default = {
-    "psf": {"label": "Point spread function", "place": "", "text": "seeing"},
-    "spread": {"label": "Seeing spread method", "place": "", "text": "fft"},
+DEFAULT = {
+    "psf": {"label": "Point spread function", "place": "SEEING", "text": "seeing"},
+    "spread": {"label": "Seeing spread method", "place": "FFT", "text": "fft"},
     "hwhm": {"label": "Half width at half of maximum", "place": "1.00", "text": "pix"},
     "airy": {"label": "Radius of Airy spot", "place": "0.10", "text": "pix"},
     "beta": {"label": "Moffat exponent", "place": "2.00", "text": ""},
@@ -22,7 +19,7 @@ default = {
     "back-grad-x": {"label": "Background gradient in x", "place": "0.0", "text": "cts/pix"},
     "back-grad-y": {"label": "Background gradient in y", "place": "0.0", "text": "cts/pix"},
     "area": {"label": "Area of input aperture", "place": "1.00", "text": "m<sup>2</sup>"},
-    "diameter": {"label": "Diameter of input aperture", "place": "1.1", "text": "m"},
+    "diameter": {"label": "Diameter of input aperture", "place": "", "text": "m"},
     "exptime": {"label": "Exposure time", "place": "1.0", "text": "s"},
     "qeff": {"label": "Quantum efficiency", "place": "1.00", "text": ""},
     "atmosphere": {"label": "Apply atmosphere modelling", "place": "", "text": "extinction, seeing"},
@@ -41,53 +38,37 @@ default = {
 }
 
 
-def coordination(name):
-    """Get object coordination from Simbad database by the name"""
-    try:
-        coord = SkyCoord.from_name(name)
-    except NameResolveError:
-        return None
-    else:
-        return coord
+def config():
+    """Setup parameters with options configuration"""
+    if not session.get("config", False):
+        session["config"] = {}
+    if request.method == "POST":
+        setin = 0
+        setup = request.form.to_dict()
+        del setup["token"]
+        for field in setup:
+            if setup[field]:
+                setin += 1
+        if "psf" in setup and setup["psf"] == "SEEING":
+            setin -= 1
+        if "spread" in setup and setup["spread"] == "FFT":
+            setin -= 1
+        session["setin"] = setin
+        session["config"] = setup
+        session["reset"] = True
+        session.modified = True
+    form = session.get("config", {})
+    return render_template("config.html", form=form, default=DEFAULT,
+                           token=token_urlsafe(32))
 
 
-def catalogue(coord, setup):
-    """Get catalogue from VO server"""
-    fov = setup.get("fov", default["fov"]["place"])
-    ret = sub.run("munipack cone --verbose --cat=UCAC4 --radius={} -- '{}' '{}'"
-                  .format(fov, coord.ra.deg, coord.dec.deg), shell=True,
-                  stdout=sub.PIPE, stderr=sub.STDOUT, universal_newlines=True)
-    return {"retcode": ret.returncode, "args": ret.args, "stdout": ret.stdout}
-
-
-def artificial(coord, setup):
-    """Generate artificial frame"""
-    cmd = ["munipack", "artificial", "--verbose", "--cat=cone.fits"]
-    for key in setup:
-        if setup[key]:
-            if key == "atmosphere":
-                cmd.append("--{}".format(key))
-            else:
-                cmd.append("--{}={}".format(key, setup[key]))
-    cmd.append("--rcen={}".format(coord.ra.deg))
-    cmd.append("--dcen={}".format(coord.dec.deg))
-    if "date" not in setup or not setup["date"]:
-        cmd.append("--date={}".format(strftime("%Y-%m-%d")))
-    if "time" not in setup or not setup["time"]:
-        cmd.append("--time={}".format(strftime("%H:%M:%S")))
-    ret = sub.run(cmd, stdout=sub.PIPE, stderr=sub.STDOUT,
-                  universal_newlines=True)
-    return {"retcode": ret.returncode, "args": ret.args, "stdout": ret.stdout}
-
-
-def fitspng():
-    """Generate unique name for static images"""
-    if os.path.exists("artificial.fits"):
-        sub.run("fitspng -o static/fitspng.png artificial.fits", shell=True)
-        os.rename("artificial.fits", "static/artificial.fits")
-    imname = "/static/fitspng.png?{}".format(int(time()))
-    finame = "/static/artificial.fits?{}".format(int(time()))
-    return imname, finame
+def reset():
+    """Setup page after reseting settings"""
+    session["setin"] = 0
+    session["config"] = {}
+    session["reset"] = True
+    session.modified = True
+    return redirect("/config")
 
 
 # -------------------------------------------------------------------------- #
