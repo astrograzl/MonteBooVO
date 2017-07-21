@@ -1,13 +1,26 @@
 {% extends "basic.html" %}
 
 {% block head %}
-<div class="jumbotron">
+<div class="jumbotron container">
   <h1>MonteBoo <small>Virtual Observatory</small></h1>
   <h2>Munipack Artificial Sky</h2>
-  <p><form action="result" method="POST">
-    <input name="name" type="search" placeholder="Search for object in Simbad database by his name or coordination, try lucky and be patient please..." class="form-control" autofocus>
-    <input name="type" type="hidden" value="search">
-  </form></p>
+  <p class="row">
+  <div class="col-sm-6">
+    <form action="result" method="POST">
+      <input name="name" type="search"
+             placeholder="Search for object you like in Simbad database"
+             class="form-control btn-lg" autofocus>
+      <input name="type" type="hidden" value="search">
+    </form>
+  </div>
+  <div class="col-sm-6">
+    <form action="result" method="POST" class="lead">
+      &emsp;or you can try lucky with&emsp;
+      <button type="submit" class="btn btn-primary btn-lg">Random frame</button>
+      <input name="type" type="hidden" value="random">
+    </form>
+  </div>
+</p>
   <p class="lead">You can search in astronomy database
     <a href="http://simbad.u-strasbg.fr/simbad/">Simbad</a>
     directly using object name like <code>M&nbsp;31</code>
@@ -23,21 +36,24 @@
 
 <div class="row">
   <div class="col-sm-4">
-    <figure class="thumbnail"><img src="/static/bllac.png">
+    <figure class="thumbnail">
+      <img src="/static/bllac.png" alt="Bl Lac Chaotic Blazar in Lacerta">
       <figcaption class="caption">
         <h3>Bl Lac <small>Chaotic Blazar in Lacerta</small></h3>
       </figcaption>
     </figure>
   </div>
   <div class="col-sm-4">
-    <figure class="thumbnail"><img src="/static/ngc869.png">
+    <figure class="thumbnail">
+      <img src="/static/ngc869.png" alt="NGC 869 Open cluster in Perseus">
       <figcaption class="caption">
         <h3>NGC 869 <small>Open cluster in Perseus</small></h3>
       </figcaption>
     </figure>
   </div>
   <div class="col-sm-4">
-    <figure class="thumbnail"><img src="/static/m13.png">
+    <figure class="thumbnail">
+      <img src="/static/m13.png" alt="M 13 Globular cluster in Hercules">
       <figcaption class="caption">
         <h3>M 13 <small>Globular cluster in Hercules</small></h3>
       </figcaption>

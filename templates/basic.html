@@ -24,13 +24,20 @@
         <form action="result" method="POST" class="navbar-form">
           <input name="type" type="hidden" value="button">
           <button type="submit" class="btn btn-success">
-            Result {% if session.get('reset', False) %}<span class="badge glyphicon glyphicon-refresh"> </span>{% endif %}
+            Result {% if session.get('reset', False) %}
+                   <span class="badge glyphicon glyphicon-refresh">
+                   </span>
+                   {% endif %}
           </button>
         </form>
       </li>
       {% endif %}
       <li><a href="config">{# symbol visibly onle when changes are made #}
-        Config {% if session.get('setin', 0) > 0 %}<span class="badge glyphicon glyphicon-cog"> </span>{% endif %}</a></li>
+        Config {% if session.get('setin', 0) > 0 %}
+               <span class="badge glyphicon glyphicon-cog">
+               </span>
+               {% endif %}
+      </a></li>
       <li><a href="debug">Debug</a></li>
       <li><a href="http://munipack.physics.muni.cz/artific.html" target="_blank">
         Help <span class="glyphicon glyphicon-share"> </span></a></li>

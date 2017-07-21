@@ -1,6 +1,6 @@
 #!python
 # coding: utf-8
-"""MonteBoo Virtual Observatory & Munipack Artificial Sky"""
+"""MonteBoo Virtual Observatory & Munipack Artificial Sky."""
 
 
 from secrets import token_urlsafe
@@ -16,51 +16,51 @@ app.jinja_env.lstrip_blocks = True
 @app.route("/")
 @app.route("/index")
 def index():
-    """Index page with search input"""
+    """Show Index page with search input."""
     return render_template("index.html")
 
 
 @app.route("/about")
 def about():
-    """About page with version information"""
+    """Show About page with version information."""
     return monte.about()
 
 
 @app.route("/result", methods=["GET", "POST"])
 def result():
-    """Result page with artificial frame"""
+    """Show Result page with artificial frame."""
     return monte.result()
 
 
 @app.route("/config", methods=["GET", "POST"])
 def config():
-    """Setup parameters with options configuration"""
+    """Show Setup parameters with options configuration."""
     return monte.config()
 
 
 @app.route("/config/reset")
 def reset():
-    """Setup page after reseting settings"""
+    """Show Setup page after reseting settings."""
     return monte.reset()
 
 
 @app.errorhandler(Exception)
 def error(err):
-    """Do not panic"""
+    """Do not panic."""
     flash(err)
     return render_template("error.html")
 
 
 @app.errorhandler(404)
 def notfound(err):
-    """Page Not Found"""
+    """Show Page Not Found."""
     flash(err)
     return render_template("notfound.html"), 404
 
 
 @app.route("/debug")
 def debug():
-    """Show verbose debug output"""
+    """Show verbose debug output."""
     data = session.get("data", {})
     if data.get("name", False):
         return render_template("debug.html", session=session)
