@@ -63,7 +63,7 @@ def fitspng():
     if not os.path.exists("artificial.fits"):
         flash("Not found new artificial frame. " +
               "Have a look at debug page for more information. " +
-              "Intead of staring at this not actual image.")
+              "Instead of staring at this not actual image.")
 
     ret = sub.run("fitspng --verbose -o static/fitspng.png artificial.fits",
                   stdout=sub.PIPE, stderr=sub.STDOUT, shell=True,

@@ -48,7 +48,7 @@ def reset():
 def error(err):
     """Do not panic."""
     flash(err)
-    return render_template("error.html")
+    return render_template("error.html"), 666
 
 
 @app.errorhandler(404)

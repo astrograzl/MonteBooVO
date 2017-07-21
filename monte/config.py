@@ -76,7 +76,7 @@ DEFAULT = {
     #          "place": "0.0", "text": "deg"},
 
     "fov": {"label": "Field of view",
-            "place": "0.2", "text": "deg"},
+            "place": "0.185", "text": "deg"},
 
     "scale": {"label": "Scale",
               "place": "1/3600", "text": "deg/pix"},
