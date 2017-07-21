@@ -5,10 +5,27 @@
 {% endblock head %}
 
 {% block content %}
+<div class="text-center">
+  <p class="lead">Did you find a bug?! That is unpleasantly :-/
+    So let me please know and I try to repair it as soon as possible.
+    I promise ;-)
+  </p>
+  <p>
+    <a href="https://github.com/astrograzl/MonteBooVO/issues"
+       class="btn btn-info btn-lg" target="_blank">
+      Report the bug
+    </a>
+  </p>
+  <figure class="center-block">
+    <img src="/static/neo.jpg"
+         alt="Neo is watching you"
+         class="img-responsive">
+  </figure>
+</div>
 {% endblock content %}
 
 {% block back %}
 <div style="background: url('/static/matrix.jpg')
-            no-repeat fixed center bottom; height: 300px;">
+            no-repeat fixed center bottom; height: 200px;">
 </div>
 {% endblock back %}

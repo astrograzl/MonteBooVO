@@ -1,6 +1,6 @@
 #!python
 # coding: utf-8
-"""MonteBoo Virtual Observatory & Munipack Artificial Sky"""
+"""MonteBoo Virtual Observatory & Munipack Artificial Sky."""
 
 from .about import about
 from .result import result

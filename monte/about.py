@@ -1,6 +1,6 @@
 #!python
 # coding: utf-8
-"""MonteBoo Virtual Observatory & Munipack Artificial Sky"""
+"""MonteBoo Virtual Observatory & Munipack Artificial Sky."""
 
 
 import subprocess as sub
@@ -8,8 +8,9 @@ from flask import render_template
 
 
 def about():
-    """About page with version information"""
-    subs = {"shell": True, "stdout": sub.PIPE, "universal_newlines": True}
+    """Get information about programs version."""
+    subs = {"shell": True, "stdout": sub.PIPE, "stderr": sub.DEVNULL,
+            "universal_newlines": True}
     muni = sub.run("munipack --version", **subs)
     fits = sub.run("fitspng --version", **subs)
     data = {"muni": muni.stdout, "fits": fits.stdout}
