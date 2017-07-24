@@ -4,7 +4,7 @@
 
 from .about import about
 from .result import result
-from .config import config, reset
+from .config import config, reset, export
 
 # -------------------------------------------------------------------------- #
 # "THE BEER-WARE LICENSE" (Revision 42):                                     #

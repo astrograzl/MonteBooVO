@@ -3,8 +3,8 @@
 """MonteBoo Virtual Observatory & Munipack Artificial Sky."""
 
 
-from secrets import token_urlsafe
-from flask import request, session, redirect, render_template
+import json
+from flask import flash, request, session, redirect, render_template, Response
 
 
 DEFAULT = {
@@ -94,12 +94,20 @@ DEFAULT = {
 
 def config():
     """Options configuration."""
-    if not session.get("config", False):
-        session["config"] = {}
     if request.method == "POST":
+        if "file" in request.files:
+            file = request.files["file"]
+            if file.filename == "":
+                flash("Select file with saved configuration first.")
+                return redirect("/config")
+            try:
+                setup = json.load(file)
+            except (UnicodeDecodeError, json.decoder.JSONDecodeError):
+                flash("Select proper file with saved configuration.")
+                return redirect("/config")
+        else:
+            setup = request.form.to_dict()
         setin = 0
-        setup = request.form.to_dict()
-        del setup["token"]
         for field in setup:
             if setup[field]:
                 setin += 1
@@ -112,8 +120,7 @@ def config():
         session["reset"] = True
         session.modified = True
     form = session.get("config", {})
-    return render_template("config.html", form=form, default=DEFAULT,
-                           token=token_urlsafe(32))
+    return render_template("config.html", form=form, default=DEFAULT)
 
 
 def reset():
@@ -123,6 +130,15 @@ def reset():
     session["reset"] = True
     session.modified = True
     return redirect("/config")
+
+
+def export():
+    """Export configuration to file"""
+    head = {}
+    head["Content-Type"] = "application/json"
+    head["Content-Disposition"] = "attachment; filename='export.json'"
+    data = json.dumps(session["config"], indent=1)
+    return Response(data, headers=head)
 
 
 # -------------------------------------------------------------------------- #

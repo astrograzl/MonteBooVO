@@ -1,37 +1,29 @@
 {% macro field(name, label, value='', place='', text='', cols=6) %}
 <div class="col-sm-{{ cols }} form-group">
   <div class="input-group">
-    <span class="input-group-addon">
-        <label for="{{ name }}">
-            <b>{{ label }}</b>
-        </label>
-    </span>
+    <span class="input-group-addon"><label for="{{ name }}">{{ label }}</label></span>
 
-    {% if name == "psf" %}
+    {% if name == 'psf' %}
 
       <span class="form-control">
-      {% for radio in ["SEEING", "MOFFAT", "GAUSS"] %}
-        <label for="{{ radio }}" style="padding-left: 2em;">
-            <b>{{ radio|lower }}</b>
-            </label>
+      {% for radio in ['SEEING', 'MOFFAT', 'GAUSS'] %}
+        <label for="{{ radio }}" style="padding-left: 2em;">{{ radio | lower }}</label>
         <input name="{{ name }}" id="{{ radio }}" type="radio" value="{{ radio }}"
                {% if value == radio %}checked{% endif %}>
       {% endfor %}
       </span>
 
-    {% elif name == "spread" %}
+    {% elif name == 'spread' %}
 
       <span class="form-control">
-      {% for radio in ["FFT", "RANDOM", "AUTO"] %}
-        <label for="{{ radio }}" style="padding-left: 3em;">
-            <b>{{ radio|lower }}</b>
-        </label>
+      {% for radio in ['FFT', 'RANDOM', 'AUTO'] %}
+        <label for="{{ radio }}" style="padding-left: 3em;">{{ radio | lower }}</label>
         <input name="{{ name }}" id="{{ radio }}" type="radio" value="{{ radio }}"
                {% if value == radio %}checked{% endif %}>
       {% endfor %}
       </span>
 
-    {% elif name == "atmosphere" %}
+    {% elif name == 'atmosphere' %}
 
       <span class="form-control text-center">
         <input name="{{ name }}" id="{{ name }}" type="checkbox"

@@ -44,11 +44,21 @@ def reset():
     return monte.reset()
 
 
-@app.errorhandler(Exception)
-def error(err):
-    """Do not panic."""
-    flash(err)
-    return render_template("error.html"), 666
+@app.route("/config/export")
+def export():
+    """Export configuration to file"""
+    if session.get("config", False):
+        return monte.export()
+    return redirect("/config")
+
+
+@app.route("/debug")
+def debug():
+    """Show verbose debug output."""
+    data = session.get("data", {})
+    if data.get("name", False):
+        return render_template("debug.html")
+    return redirect("/index")
 
 
 @app.errorhandler(404)
@@ -58,13 +68,11 @@ def notfound(err):
     return render_template("notfound.html"), 404
 
 
-@app.route("/debug")
-def debug():
-    """Show verbose debug output."""
-    data = session.get("data", {})
-    if data.get("name", False):
-        return render_template("debug.html", session=session)
-    return redirect("/index")
+@app.errorhandler(Exception)
+def error(err):
+    """Do not panic."""
+    flash(err)
+    return render_template("error.html"), 666
 
 
 if __name__ == "__main__":

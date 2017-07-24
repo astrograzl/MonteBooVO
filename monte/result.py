@@ -6,7 +6,7 @@
 import os
 import subprocess as sub
 from string import capwords
-from time import time, strftime
+from time import time, gmtime, strftime
 from astropy import units as u
 from astropy.coordinates import SkyCoord
 from astropy.coordinates.name_resolve import NameResolveError
@@ -48,10 +48,10 @@ def artificial(coord, setup):
                 cmd.append("--{}={}".format(key, setup[key]))
 
     if "date" not in setup or not setup["date"]:
-        cmd.append("--date={}".format(strftime("%Y-%m-%d")))
+        cmd.append("--date={}".format(strftime("%Y-%m-%d", gmtime())))
 
     if "time" not in setup or not setup["time"]:
-        cmd.append("--time={}".format(strftime("%H:%M:%S")))
+        cmd.append("--time={}".format(strftime("%H:%M:%S", gmtime())))
 
     ret = sub.run(cmd, stdout=sub.PIPE, stderr=sub.STDOUT,
                   universal_newlines=True)
@@ -59,12 +59,12 @@ def artificial(coord, setup):
 
 
 def fitspng():
-    """Generate unique name for static images."""
+    """Convert fits frame to png image."""
     if not os.path.exists("artificial.fits"):
         flash("Not found new artificial frame. " +
               "Have a look at debug page for more information. " +
               "Instead of staring at this not actual image.")
-
+        return {"retcode": "", "args": "", "stdout": ""}
     ret = sub.run("fitspng --verbose -o static/fitspng.png artificial.fits",
                   stdout=sub.PIPE, stderr=sub.STDOUT, shell=True,
                   universal_newlines=True)
@@ -122,9 +122,6 @@ def result():
         data = {}
         data["ra"] = {}
         data["dec"] = {}
-        data["img"] = "/static/fitspng.png?{}".format(int(time()))
-        data["fit"] = "/static/artificial.fits?{}".format(int(time()))
-        data["name"] = capwords(name)
         if name == "Random":
             data["ra"]["str"] = "00:00:00"
             data["dec"]["str"] = "00:00:00"
@@ -133,6 +130,15 @@ def result():
             data["ra"]["str"] = coor.ra.to_string(unit=u.hourangle, sep=":")
             data["dec"]["deg"] = coor.dec.deg
             data["dec"]["str"] = coor.dec.to_string(unit=u.degree, sep=":")
+        data["name"] = capwords(name)
+        if os.path.exists("static/fitspng.png"):
+            data["img"] = "/static/fitspng.png?{}".format(int(time()))
+        else:
+            data["img"] = "/static/moffat.png"
+        if os.path.exists("static/artificial.fits"):
+            data["fit"] = "/static/artificial.fits?{}".format(int(time()))
+        else:
+            data["fit"] = "#"
         session["data"] = data
         session.modified = True
 

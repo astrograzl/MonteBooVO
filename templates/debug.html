@@ -1,4 +1,4 @@
-{% extends "basic.html" %}
+{% extends 'basic.html' %}
 
 {% block head %}
 <h2>Verbose debug output</h2>
@@ -10,42 +10,42 @@
   If you are in ugly trouble, call <em>The Doctor</em>!<br>
 </p>
 
-{% if session.get("cat") %}
+{% if session.get('cat') %}
 <section>
   <h3>Cone search</h3>
   <p>
-    <b><code>{{ session.cat.retcode }}</b></code>
-    <code>{{ session.cat.args }}</code>
+    <b><code>{{ session['cat']['retcode'] }}</b></code>
+    <code>{{ session['cat']['args'] }}</code>
   </p>
-  <pre>{{ session.cat.stdout }}</pre>
+  <pre>{{ session['cat']['stdout'] }}</pre>
 </section>
 {% endif %}
 
-{% if session.get("art") %}
+{% if session.get('art') %}
 <section>
   <h3>Artificial sky</h3>
   <p>
-    <b><code>{{ session.art.retcode }}</b></code>
-    <code>{{ session.art.args|join(' ') }}</code>
+    <b><code>{{ session['art']['retcode'] }}</b></code>
+    <code>{{ session['art']['args'] | join(' ') }}</code>
   </p>
-  <pre>{{ session.art.stdout }}</pre>
+  <pre>{{ session['art']['stdout'] }}</pre>
 </section>
 {% endif %}
 
-{% if session.get("png") %}
+{% if session.get('png') %}
 <section>
   <h3>Fitspng</h3>
   <p>
-    <b><code>{{ session.png.retcode }}</b></code>
-    <code>{{ session.png.args }}</code>
+    <b><code>{{ session['png']['retcode'] }}</b></code>
+    <code>{{ session['png']['args'] }}</code>
   </p>
-  <pre>{{ session.png.stdout }}</pre>
+  <pre>{{ session['png']['stdout'] }}</pre>
 </section>
 {% endif %}
 
 <section>
   <h3>Data</h3>
-  {% for item in session.get('data', {}) %}
+  {% for item in session.get('data') %}
     <code>{{ item }}: {{ session['data'][item] }}</code><br>
   {% endfor %}
 </section>
