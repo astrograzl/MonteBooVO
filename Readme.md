@@ -7,20 +7,14 @@ dopadají na listy funkcí
 roztroušených po křemíkovém poli.
 Jen pár vteřin trvající konvoluce,
 proti hodinám promarněných expozic.
-Plakáty na zdech
-a pivo pod schody.
-Kohout co kokrhá,
-když je čas jít spát.
-V rustikálním prostředí
-vzdáleného terminálu,
-za zataženou roletou,
-schoval jsem mezi řádky
-podmínku vloženou do cyklu
-pointy dvojitého záporu.
+Plakáty na zdech a pivo pod schody.
+Kohout co kokrhá, když je čas jít spát.
+V rustikálním prostředí vzdáleného terminálu,
+za zataženou roletou, schoval jsem mezi řádky
+podmínku vloženou do cyklu pointy dvojitého záporu.
 
-Pro tuhle srandičku
-budeš potřebovat něco navíc,
-než jen webový prohlížeč.
+Pro tuhle srandičku budeš potřebovat
+něco navíc, než jen webový prohlížeč.
 Je mi jedno, kde ho vezmeš,
 jestli z distribučního repositáře
 `# apt-get install munipack`,
@@ -30,12 +24,10 @@ ve virtuálním prostředí
 `$ pip install flask`,
 ať tak nebo jak se vyřeší
 samy všechny závislosti.
-Na skoro všechno ostatní
-platí jednoduché,
-ale mocné zaklínadlo
+Na skoro všechno ostatní platí
+jednoduché, ale mocné zaklínadlo
 `./configure && make && sudo make install`.
-Pak už bude stačit
-jenom jeden *klon*
+Pak už bude stačit jenom jeden *klon*
 a `cd` si můžeš spustit
 na vlastním serveru
 oblíbeného lokálu

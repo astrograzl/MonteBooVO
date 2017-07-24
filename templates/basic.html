@@ -6,6 +6,7 @@
   <meta name="description" content="MonteBoo Virtual Observatory">
   <meta name="author" content="Zdeněk Janák <janak@astronomie.cz>">
   <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/static/css/style.css" rel="stylesheet">
   <link rel="icon" href="/static/art.png">
   <title>MonteBooVO&trade;</title>
 </head>
@@ -20,7 +21,7 @@
     <ul class="navbar-nav nav">
       <li><a href="about">About</a></li>
       {% if session.get('data', False) != False %}
-      <li>{# visible only when data in session #}
+      <li>{# button visible only when data in session #}
         <form action="result" method="POST" class="navbar-form">
           <input name="type" type="hidden" value="button">
           <button type="submit" class="btn btn-success">
@@ -32,12 +33,14 @@
         </form>
       </li>
       {% endif %}
-      <li><a href="config">{# symbol visibly onle when changes are made #}
+      <li>{# symbol visible only when changes are made #}
+        <a href="config">
         Config {% if session.get('setin', 0) > 0 %}
                <span class="badge glyphicon glyphicon-cog">
                </span>
                {% endif %}
-      </a></li>
+        </a>
+      </li>
       <li><a href="debug">Debug</a></li>
       <li><a href="http://munipack.physics.muni.cz/artific.html" target="_blank">
         Help <span class="glyphicon glyphicon-share"> </span></a></li>
