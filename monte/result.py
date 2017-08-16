@@ -5,6 +5,7 @@
 
 import os
 import subprocess as sub
+from uuid import uuid4
 from string import capwords
 from time import time, gmtime, strftime
 from astropy import units as u
@@ -23,20 +24,22 @@ def coordination(name):
         return coord
 
 
-def catalogue(coord):
+def catalogue(coord, id):
     """Get catalogue from VO server."""
-    ret = sub.run("munipack cone --verbose --cat=UCAC4 -r 0.5 -- '{}' '{}'"
+    if not os.path.isdir("cone"):
+        os.mkdir("cone")
+    ret = sub.run("munipack cone --output=cone/{}.fits ".format(id) +
+                  "--verbose --cat=UCAC4 -r 0.5 -- '{}' '{}'"
                   .format(coord.ra.deg, coord.dec.deg), shell=True,
                   stdout=sub.PIPE, stderr=sub.STDOUT, universal_newlines=True)
     return {"retcode": ret.returncode, "args": ret.args, "stdout": ret.stdout}
 
 
-def artificial(coord, setup):
+def artificial(coord, setup, id):
     """Generate artificial frame."""
-    if coord is None:
-        cmd = ["munipack", "artificial", "--verbose"]
-    else:
-        cmd = ["munipack", "artificial", "--verbose", "--cat=cone.fits"]
+    cmd = ["munipack", "artificial", "--verbose", "--mask={}.fits".format(id)]
+    if coord is not None:
+        cmd.append("--cat=cone/{}.fits".format(id))
         cmd.append("--rcen={}".format(coord.ra.deg))
         cmd.append("--dcen={}".format(coord.dec.deg))
 
@@ -58,17 +61,17 @@ def artificial(coord, setup):
     return {"retcode": ret.returncode, "args": ret.args, "stdout": ret.stdout}
 
 
-def fitspng():
+def fitspng(id):
     """Convert fits frame to png image."""
-    if not os.path.exists("artificial.fits"):
+    if not os.path.exists("{}.fits".format(id)):
         flash("Not found new artificial frame. " +
               "Have a look at debug page for more information. " +
               "Instead of staring at this not actual image.")
         return {"retcode": "", "args": "", "stdout": ""}
-    ret = sub.run("fitspng --verbose -o static/fitspng.png artificial.fits",
+    ret = sub.run("fitspng --verbose -o static/{}.png {}.fits".format(id, id),
                   stdout=sub.PIPE, stderr=sub.STDOUT, shell=True,
                   universal_newlines=True)
-    os.rename("artificial.fits", "static/artificial.fits")
+    os.rename("{}.fits".format(id), "static/{}.fits".format(id))
     return {"retcode": ret.returncode, "args": ret.args, "stdout": ret.stdout}
 
 
@@ -76,6 +79,7 @@ def result():
     """Show Result page with artificial frame."""
     if request.method == "POST":
         if request.form["type"] == "random":  # random frame
+            id = str(uuid4())
             click = False
             search = False
             random = True
@@ -83,6 +87,7 @@ def result():
             coor = None
 
         elif request.form["type"] == "search":  # search widget
+            id = str(uuid4())
             search = True
             click = False
             random = False
@@ -93,7 +98,7 @@ def result():
                 flash("Can't find required object. Please try another one.")
                 return redirect("/index")
 
-            session["cat"] = catalogue(coor)
+            session["cat"] = catalogue(coor, id)
             session.modified = True
             if session["cat"]["retcode"] != 0:
                 flash("This is really bad :-( " +
@@ -101,6 +106,7 @@ def result():
                 return redirect("/index")
 
         elif request.form["type"] == "button":  # click on button
+            id = session["id"]
             click = True
             search = False
             random = False
@@ -113,8 +119,9 @@ def result():
                 coor = SkyCoord(ra=ra, dec=dec, unit=u.degree)
 
         if search or random or (click and session.get("reset", False)):
-            session["art"] = artificial(coor, session.get("config", {}))
-            session["png"] = fitspng()
+            session["id"] = id
+            session["art"] = artificial(coor, session.get("config", {}), id)
+            session["png"] = fitspng(id)
             session["reset"] = False
             session.modified = True
 
@@ -131,12 +138,12 @@ def result():
             data["dec"]["deg"] = coor.dec.deg
             data["dec"]["str"] = coor.dec.to_string(unit=u.degree, sep=":")
         data["name"] = capwords(name)
-        if os.path.exists("static/fitspng.png"):
-            data["img"] = "/static/fitspng.png?{}".format(int(time()))
+        if os.path.exists("static/{}.png".format(id)):
+            data["img"] = "/static/{}.png?{}".format(id, int(time()))
         else:
-            data["img"] = "/static/moffat.png"
-        if os.path.exists("static/artificial.fits"):
-            data["fit"] = "/static/artificial.fits?{}".format(int(time()))
+            data["img"] = "/static/images/moffat.png"
+        if os.path.exists("static/{}.fits".format(id)):
+            data["fit"] = "/static/{}.fits?{}".format(id, int(time()))
         else:
             data["fit"] = "#"
         session["data"] = data
