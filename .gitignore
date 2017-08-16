@@ -1,6 +1,5 @@
 itt.dat
-cone.fits*
+cone/
+static/*.fits
+static/*.png
 __pycache__/
-monte/__pychache__/
-static/artificial.fits
-static/fitspng.png
