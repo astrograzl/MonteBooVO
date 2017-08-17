@@ -1,26 +1,33 @@
 {% extends 'basic.html' %}
 
 {% block head %}
-<div class="jumbotron container">
+<div class="jumbotron">
   <h1>MonteBoo <small>Virtual Observatory</small></h1>
   <h2>Munipack Artificial Sky</h2>
-  <p class="row">
-  <div class="col-sm-6">
-    <form action="result" method="POST">
-      <input name="name" type="search"
-             placeholder="Search for object you like in Simbad database"
-             class="form-control btn-lg" autofocus>
-      <input name="type" type="hidden" value="search">
-    </form>
+  <div class="row">
+    <div class="col-sm-6">
+      <form action="result" method="POST">
+        <div class="input-group input-group-lg">
+          <input name="name" type="search"
+               placeholder="Search for object you like in Simbad database"
+               class="form-control" autofocus>
+          <span class="input-group-btn">
+            <button type="submit" class="btn btn-primary">
+              <span class="glyphicon glyphicon-search"></span>
+            </button>
+          </span>
+        </div>
+        <input name="type" type="hidden" value="search">
+      </form>
+    </div>
+    <div class="col-sm-6">
+      <form action="result" method="POST" class="lead">
+        &emsp;or you can try lucky with&emsp;
+        <button type="submit" class="btn btn-primary btn-lg">Random frame</button>
+        <input name="type" type="hidden" value="random">
+      </form>
+    </div>
   </div>
-  <div class="col-sm-6">
-    <form action="result" method="POST" class="lead">
-      &emsp;or you can try lucky with&emsp;
-      <button type="submit" class="btn btn-primary btn-lg">Random frame</button>
-      <input name="type" type="hidden" value="random">
-    </form>
-  </div>
-</p>
   <p class="lead">You can search in astronomy database
     <a href="http://simbad.u-strasbg.fr/simbad/">Simbad</a>
     directly using object name like <code>M&nbsp;31</code>
