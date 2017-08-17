@@ -37,7 +37,8 @@ def catalogue(coord, id):
 
 def artificial(coord, setup, id):
     """Generate artificial frame."""
-    cmd = ["munipack", "artificial", "--verbose", "--mask=static/{}.fits".format(id)]
+    cmd = ["munipack", "artificial", "--verbose", "--mask=static/{}.fits.gz"
+           .format(id)]
     if coord is not None:
         cmd.append("--cat=cone/{}.fits".format(id))
         cmd.append("--rcen={}".format(coord.ra.deg))
@@ -63,12 +64,12 @@ def artificial(coord, setup, id):
 
 def fitspng(id):
     """Convert fits frame to png image."""
-    if not os.path.exists("static/{}.fits".format(id)):
+    if not os.path.exists("static/{}.fits.gz".format(id)):
         flash("Not found new artificial frame. " +
               "Have a look at debug page for more information. " +
               "Instead of staring at this not actual image.")
         return {"retcode": "", "args": "", "stdout": ""}
-    ret = sub.run("fitspng --verbose -o static/{}.png static/{}.fits"
+    ret = sub.run("fitspng --verbose -o static/{}.png static/{}.fits.gz"
                   .format(id, id),
                   stdout=sub.PIPE, stderr=sub.STDOUT, shell=True,
                   universal_newlines=True)
@@ -143,8 +144,8 @@ def result():
             data["img"] = "/static/{}.png?{}".format(id, int(time()))
         else:
             data["img"] = "/static/images/moffat.png"
-        if os.path.exists("static/{}.fits".format(id)):
-            data["fit"] = "/static/{}.fits?{}".format(id, int(time()))
+        if os.path.exists("static/{}.fits.gz".format(id)):
+            data["fit"] = "/static/{}.fits.gz?{}".format(id, int(time()))
         else:
             data["fit"] = "#"
         session["data"] = data

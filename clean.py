@@ -9,18 +9,20 @@ from glob import glob
 from time import time
 
 
-if len(sys.argv) > 1:
+if len(sys.argv) == 3:
     path = sys.argv[1]
+    hist = int(sys.argv[2])
     if not os.path.isdir(path):
         sys.exit("Not a valid path to the directory")
 else:
     path = os.getcwd()
+    hist = 60 * 60 * 24 * 7
 
-past = time() - 60 * 60 * 24 * 7
+past = time() - hist
 
 mask = "????????-????-????-????-????????????"
 cone = glob(os.path.join(path, "cone", mask+".fits"))
-fits = glob(os.path.join(path, "static", mask+".fits"))
+fits = glob(os.path.join(path, "static", mask+".fits.gz"))
 pngs = glob(os.path.join(path, "static", mask+".png"))
 
 garbage = cone + fits + pngs
