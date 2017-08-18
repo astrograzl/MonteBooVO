@@ -64,7 +64,7 @@ def artificial(coord, setup, id):
 
 def fitspng(id):
     """Convert fits frame to png image."""
-    if not os.path.exists("static/{}.fits.gz".format(id)):
+    if time() - os.path.getmtime("static/{}.fits.gz".format(id)) > 1:
         flash("Not found new artificial frame. " +
               "Have a look at debug page for more information. " +
               "Instead of staring at this not actual image.")
@@ -73,7 +73,6 @@ def fitspng(id):
                   .format(id, id),
                   stdout=sub.PIPE, stderr=sub.STDOUT, shell=True,
                   universal_newlines=True)
-    # os.rename("{}.fits".format(id), "static/{}.fits".format(id))
     return {"retcode": ret.returncode, "args": ret.args, "stdout": ret.stdout}
 
 
