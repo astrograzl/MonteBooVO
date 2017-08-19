@@ -26,7 +26,13 @@ def about():
     return monte.about()
 
 
-@app.route("/result", methods=["GET", "POST"])
+@app.route("/proces", methods=["GET", "POST"])
+def proces():
+    """Process request about artificial frame"""
+    return monte.proces()
+
+
+@app.route("/result")
 def result():
     """Show Result page with artificial frame."""
     return monte.result()

@@ -1,0 +1,35 @@
+{% extends 'basic.html' %}
+
+{% block meta %}
+<meta http-equiv="refresh" content="10;/proces">
+<script src="/static/js/p5.min.js"></script>
+<script src="/static/js/sketch.js"></script>
+{% endblock meta %}
+
+{% block head %}
+<h2>Peace by patien</h2>
+{% endblock head %}
+
+{% block content %}
+
+<p>    Dear customer,
+  your requisition <code>{{ session['id'] }}</code>
+  is currently preferably and urgently processing.
+  Thank you for your patience with our precious time
+  [s].
+</p>
+
+<div id="canvas" class="text-center"></div>
+
+<div class="progress">
+  <div class="progress-bar"
+       role="progressbar"
+       aria-valuenow="{{ dt }}"
+       aria-valuemin="0"
+       aria-valuemax="666"
+       style="width: {{ pt }}%;">
+    {{ dt }}
+  </div>
+</div>
+
+{% endblock content %}
