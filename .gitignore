@@ -1,5 +1,8 @@
 itt.dat
 cone/
-static/*.fits
+static/artificial.fits
+static/fitspng.png
+static/*.fits.gz
 static/*.png
 __pycache__/
+stdout.log

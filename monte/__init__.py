@@ -3,8 +3,13 @@
 """MonteBoo Virtual Observatory & Munipack Artificial Sky."""
 
 from .about import about
+from .proces import proces
 from .result import result
 from .config import config, reset, export
+
+
+__all__ = [about, proces, result, config, reset, export]
+
 
 # -------------------------------------------------------------------------- #
 # "THE BEER-WARE LICENSE" (Revision 42):                                     #
