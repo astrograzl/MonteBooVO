@@ -30,13 +30,15 @@ def catalogue(coord, id):
     """Get catalogue from VO server."""
     session["coord"] = True
     std = open("stderr.log", "w")
-    ret = sub.Popen("munipack cone --output=static/{}.fits.gz".format(id) +
+    pop = sub.Popen("munipack cone --output=static/{}.fits.gz".format(id) +
                     " --verbose --cat=UCAC4 --radius=0.256 -- '{}' '{}'"
                     .format(coord.ra.deg, coord.dec.deg), shell=True,
                     stdout=std, stderr=sub.STDOUT, universal_newlines=True)
-    session["cat"] = {"args": ret["args"], "retcode": 0, "stdout": ""}
+    session["cat"] = {"args": pop["args"],
+                      "retcode": 0,
+                      "stdout": ""}
     session.modified = True
-    return ret
+    return pop
 
 
 def coord():
@@ -83,9 +85,9 @@ def coord():
     if request.method == "GET":
         id = session.get("id", "")
         if session.get("coord", False) and len(id) > 0:
-            if os.path.exist("static/{}.fits.gz".format(id)):
+            co = "static/{}.fits.gz".format(id)
+            if os.path.exist(co):
                 session["coord"] = False
-                session["cat"]["retcode"] = 0
                 session["cat"]["stdout"] = open("stderr.log", "r").read()
                 session.modified = True
                 return redirect("/proces", code=307)

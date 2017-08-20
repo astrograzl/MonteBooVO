@@ -33,8 +33,8 @@ def artificial(coord, setup, id):
     if "time" not in setup or not setup["time"]:
         cmd.append("--time={}".format(strftime("%H:%M:%S", gmtime())))
 
-    stdout = open("stdout.log", "w")
-    pop = sub.Popen(cmd, stdout=stdout, stderr=sub.STDOUT,
+    std = open("stdout.log", "w")
+    pop = sub.Popen(cmd, stdout=std, stderr=sub.STDOUT,
                     universal_newlines=True)
     session["art"] = {"args": "\n".join(pop.args),
                       "retcode": 0,
@@ -47,9 +47,13 @@ def fitspng(id):
     """Convert fits frame to png image."""
     ret = sub.run("fitspng --verbose -o static/{}.png static/{}.fits.fz"
                   .format(id, id),
-                  stdout=sub.PIPE, stderr=sub.STDOUT, shell=True,
-                  universal_newlines=True)
-    return {"retcode": ret.returncode, "args": ret.args, "stdout": ret.stdout}
+                  stdout=sub.PIPE,
+                  stderr=sub.STDOUT,
+                  universal_newlines=True,
+                  shell=True,)
+    return {"retcode": ret.returncode,
+            "args": ret.args,
+            "stdout": ret.stdout}
 
 
 def proces():
