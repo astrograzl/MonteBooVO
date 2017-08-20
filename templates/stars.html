@@ -1,0 +1,34 @@
+{% extends 'basic.html' %}
+
+{% block head %}
+<div class="text-center">
+<h2>{{ data.name }}</h2>
+<form class="form-inline">
+  <div class="form-group">
+    <div class="input-group">
+      <span class="input-group-addon"><b>α</b></span>
+      <input type="text" value="{{ data.ra.str }}" class="form-control" readonly>
+      <span class="input-group-addon"><i>hms</i></span>
+    </div>
+    &emsp;
+    <div class="input-group">
+      <span class="input-group-addon"><b>δ</b></span>
+      <input type="text" value="{{ data.dec.str }}" class="form-control" readonly>
+      <span class="input-group-addon"><i>dms</i></span>
+    </div>
+  </div>
+</form>
+</div>
+{% endblock head %}
+
+{% block content %}
+<figure class="text-center">
+  <img src="{{ data.svg }}" alt="Artificial sky">
+  <figcaption>
+    <br>
+    <a href="{{ data.fit }}" class="btn btn-primary">
+      <span class="glyphicon glyphicon-save"></span>&nbsp;Download compressed FITS file
+    </a>
+  </figcaption>
+</figure>
+{% endblock content %}

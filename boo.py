@@ -25,10 +25,16 @@ def about():
     """Show About page with version information."""
     return monte.about()
 
+
 @app.route("/coord", methods=["GET", "POST"])
 def coord():
     """Process coordination question and catalogue download"""
     return monte.coord()
+
+
+@app.route("/stars")
+def stars():
+    return monte.stars()
 
 
 @app.route("/proces", methods=["GET", "POST"])

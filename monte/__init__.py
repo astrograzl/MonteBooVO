@@ -4,12 +4,13 @@
 
 from .about import about
 from .coord import coord
+from .stars import stars
 from .proces import proces
 from .result import result
 from .config import config, reset, export
 
 
-__all__ = [about, coord, proces, result, config, reset, export]
+__all__ = [about, coord, stars, proces, result, config, reset, export]
 
 
 # -------------------------------------------------------------------------- #
