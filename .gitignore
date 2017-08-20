@@ -6,3 +6,4 @@ static/*.fits.gz
 static/*.png
 __pycache__/
 stdout.log
+stderr.log

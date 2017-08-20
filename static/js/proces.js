@@ -1,8 +1,8 @@
 function setup() {
-  noStroke();
-  frameRate(25);
   var canvas = createCanvas(960, 720);
   canvas.parent('canvas');
+  frameRate(25);
+  noStroke();
 }
 
 var t = 666;
@@ -30,8 +30,8 @@ function terc(r) {
 }
 
 function strela(r) {
-  var x = random(-width/2, width/2);
-  var y = random(-height/2, height/2);
+  var x = random(-width/2+16, width/2-16);
+  var y = random(-height/2+16, height/2-16);
   if (sqrt(sq(x)+sq(y)) < t/2) {
     fill(255, 0, 0);
     ellipse(x, y, r, r);
