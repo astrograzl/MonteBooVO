@@ -13,10 +13,10 @@ from flask import flash, request, session, redirect, render_template
 
 def artificial(coord, setup, id):
     """Generate artificial frame."""
-    cmd = ["munipack", "artificial", "--verbose", "--mask=static/{}.fits.gz"
+    cmd = ["munipack", "artificial", "--verbose", "--mask=static/{}.fits.fz"
            .format(id)]
     if session["data"]["name"] != "Random":
-        cmd.append("--cat=cone/{}.fits".format(id))
+        cmd.append("--cat=static/{}.fits.gz".format(id))
         cmd.append("--rcen={}".format(coord.ra.deg))
         cmd.append("--dcen={}".format(coord.dec.deg))
 
@@ -45,7 +45,7 @@ def artificial(coord, setup, id):
 
 def fitspng(id):
     """Convert fits frame to png image."""
-    ret = sub.run("fitspng --verbose -o static/{}.png static/{}.fits.gz"
+    ret = sub.run("fitspng --verbose -o static/{}.png static/{}.fits.fz"
                   .format(id, id),
                   stdout=sub.PIPE, stderr=sub.STDOUT, shell=True,
                   universal_newlines=True)
@@ -60,7 +60,7 @@ def proces():
             ra = session["data"]["ra"]["deg"]
             dec = session["data"]["dec"]["deg"]
             coor = SkyCoord(ra, dec, unit=u.deg)
-            sky = "static/{}.fits.gz".format(id)
+            sky = "static/{}.fits.fz".format(id)
             if os.path.exists(sky):
                 os.remove(sky)
             art = artificial(coor, session.get("config", {}), id)
@@ -81,7 +81,7 @@ def proces():
     if request.method == "GET":
         id = session.get("id", "")
         if session.get("proces", False) and len(id) > 0:
-            sky = "static/{}.fits.gz".format(id)
+            sky = "static/{}.fits.fz".format(id)
             if os.path.exists(sky):
                 session["proces"] = False
                 session["art"]["stdout"] = open("stdout.log", "r").read()

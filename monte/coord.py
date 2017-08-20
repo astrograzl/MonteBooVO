@@ -28,12 +28,10 @@ def coordination(name):
 
 def catalogue(coord, id):
     """Get catalogue from VO server."""
-    if not os.path.isdir("cone"):
-        os.mkdir("cone")
     session["coord"] = True
     std = open("stderr.log", "w")
-    ret = sub.Popen("munipack cone --output=cone/{}.fits ".format(id) +
-                    "--verbose --cat=UCAC4 --radius=0.256 -- '{}' '{}'"
+    ret = sub.Popen("munipack cone --output=static/{}.fits.gz".format(id) +
+                    " --verbose --cat=UCAC4 --radius=0.256 -- '{}' '{}'"
                     .format(coord.ra.deg, coord.dec.deg), shell=True,
                     stdout=std, stderr=sub.STDOUT, universal_newlines=True)
     session["cat"] = {"args": ret["args"], "retcode": 0, "stdout": ""}
@@ -66,7 +64,7 @@ def coord():
         session.modified = True
 
         if name != "Random":
-            co = "cone/{}.fits".format(id)
+            co = "static/{}.fits.gz".format(id)
             if os.path.exists(co):
                 os.remove(co)
             cat = catalogue(coor, id)
@@ -85,7 +83,7 @@ def coord():
     if request.method == "GET":
         id = session.get("id", "")
         if session.get("coord", False) and len(id) > 0:
-            if os.path.exist("cone/{}.fits".format(id)):
+            if os.path.exist("static/{}.fits.gz".format(id)):
                 session["coord"] = False
                 session["cat"]["retcode"] = 0
                 session["cat"]["stdout"] = open("stderr.log", "r").read()

@@ -16,16 +16,17 @@ if len(sys.argv) == 3:
         sys.exit("Not a valid path to the directory")
 else:
     path = os.getcwd()
-    hist = 60 * 60 * 24 * 7
+    hist = 666  # 60 * 60 * 24 * 7
 
 past = time() - hist
 
 mask = "????????-????-????-????-????????????"
-cone = glob(os.path.join(path, "cone", mask+".fits"))
-fits = glob(os.path.join(path, "static", mask+".fits.gz"))
+cone = glob(os.path.join(path, "static", mask+".fits.gz"))
+fits = glob(os.path.join(path, "static", mask+".fits.fz"))
 pngs = glob(os.path.join(path, "static", mask+".png"))
+svgs = glob(os.path.join(path, "static", mask+".svg"))
 
-garbage = cone + fits + pngs
+garbage = cone + fits + pngs + svgs
 
 for waste in garbage:
     if os.path.getmtime(waste) < past:
