@@ -15,7 +15,7 @@ def stars():
     id = session.get("id", "")
     sess = session.get("data", {})
     if sess.get("name", "Random") != "Random" and len(id) > 0:
-        co = "static/{}.fits".format(id)
+        co = "static/{}.fits.gz".format(id)
         if os.path.exists(co):
             data = fits.getdata(co)
             plt.figure(figsize=(8, 8))

@@ -34,6 +34,7 @@ def coord():
 
 @app.route("/stars")
 def stars():
+    """Plot star chart from catalogue data"""
     return monte.stars()
 
 

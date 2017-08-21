@@ -3,7 +3,7 @@ cone/
 static/artificial.fits
 static/fitspng.png
 static/*.fits.fz
-static/*.fits
+static/*.fits.gz
 static/*.png
 static/*.svg
 __pycache__/
