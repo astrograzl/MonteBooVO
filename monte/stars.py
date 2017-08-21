@@ -11,16 +11,24 @@ from astropy.io import fits
 
 
 def stars():
+    """Plot star chart from catalogue data"""
     id = session.get("id", "")
-    if len(id) > 0:
-        sky = "cone/{}.fits".format(id)
-        if os.path.exists(sky):
-            data = fits.getdata(sky)
-            plt.scatter(data["RAJ2000"], data["DECJ2000"], s=data["MAG"])
-            plt.savefig("static/{}.svg".format(id))
+    sess = session.get("data", {})
+    if sess.get("name", "Random") != "Random" and len(id) > 0:
+        co = "static/{}.fits".format(id)
+        if os.path.exists(co):
+            data = fits.getdata(co)
+            plt.figure(figsize=(8, 8))
+            plt.xlabel("$\\alpha$")
+            plt.ylabel("$\\delta$")
+            plt.grid(True)
+            plt.gca().invert_xaxis()
+            plt.scatter(data["RAJ2000"], data["DEJ2000"],
+                        s=2**data["Vmag"]/1024, c=data["Jmag"]-data["Vmag"])
+            plt.savefig("static/{}.svg".format(id), bbox_inches="tight")
             session["data"]["svg"] = "static/{}.svg?{}".format(id, int(time()))
             session.modified = True
-            return render_template("stars.html")
+            return render_template("stars.html", data=session.get("data", {}))
         return redirect("/debug")
     return redirect("/index")
 

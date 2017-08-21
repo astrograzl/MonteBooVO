@@ -10,8 +10,11 @@ from flask import session, redirect, render_template
 
 def result():
     """Show Result page with artificial frame."""
-    if session.get("reset", False) or session.get("proces", False):
-        return redirect("/proces")
+    if session.get("reset", False):
+        return redirect("/proces", code=307)
+
+    if session.get("proces", False):
+        return redirect("proces")
 
     data = session.get("data", {})
     if data.get("name", False):
@@ -20,8 +23,8 @@ def result():
             data["img"] = "/static/{}.png?{}".format(id, int(time()))
         else:
             data["img"] = "/static/images/moffat.png"
-        if os.path.exists("static/{}.fits.gz".format(id)):
-            data["fit"] = "/static/{}.fits.gz?{}".format(id, int(time()))
+        if os.path.exists("static/{}.fits.fz".format(id)):
+            data["fit"] = "/static/{}.fits.fz?{}".format(id, int(time()))
         else:
             data["fit"] = "#"
         session["data"] = data

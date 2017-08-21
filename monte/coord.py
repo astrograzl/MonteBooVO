@@ -31,10 +31,12 @@ def catalogue(coord, id):
     session["coord"] = True
     std = open("stderr.log", "w")
     pop = sub.Popen("munipack cone --output=static/{}.fits.gz".format(id) +
-                    " --verbose --cat=UCAC4 --radius=0.256 -- '{}' '{}'"
-                    .format(coord.ra.deg, coord.dec.deg), shell=True,
-                    stdout=std, stderr=sub.STDOUT, universal_newlines=True)
-    session["cat"] = {"args": pop["args"],
+                    " --verbose --cat=UCAC4 --type=fits --radius=0.256" +
+                    " -- '{}' '{}'".format(coord.ra.deg, coord.dec.deg),
+                    stdout=std, stderr=sub.STDOUT,
+                    universal_newlines=True,
+                    shell=True,)
+    session["cat"] = {"args": pop.args,
                       "retcode": 0,
                       "stdout": ""}
     session.modified = True
@@ -80,19 +82,20 @@ def coord():
                 session.modified = True
                 return redirect("/debug")
             return render_template("coord.html")
-        return redirect("/proces", code=307)
+        return redirect("/proces")
 
     if request.method == "GET":
         id = session.get("id", "")
-        if session.get("coord", False) and len(id) > 0:
+        if len(id) > 0:
             co = "static/{}.fits.gz".format(id)
-            if os.path.exist(co):
+            if os.path.exists(co):
                 session["coord"] = False
+                session["data"]["cat"] = co
                 session["cat"]["stdout"] = open("stderr.log", "r").read()
                 session.modified = True
-                return redirect("/proces", code=307)
+                return redirect("/proces")
             return render_template("coord.html")
-        return redirect("/index")
+        return redirect("/debug")
 
     return redirect("/index")
 

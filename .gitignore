@@ -2,8 +2,10 @@ itt.dat
 cone/
 static/artificial.fits
 static/fitspng.png
-static/*.fits.gz
+static/*.fits.fz
+static/*.fits
 static/*.png
+static/*.svg
 __pycache__/
 stdout.log
 stderr.log

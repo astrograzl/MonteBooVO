@@ -36,6 +36,8 @@ def artificial(coord, setup, id):
     std = open("stdout.log", "w")
     pop = sub.Popen(cmd, stdout=std, stderr=sub.STDOUT,
                     universal_newlines=True)
+    session["proces"] = True
+    session["reset"] = False
     session["art"] = {"args": "\n".join(pop.args),
                       "retcode": 0,
                       "stdout": ""}
@@ -58,44 +60,40 @@ def fitspng(id):
 
 def proces():
     """Process request about artificial frame."""
-    if request.method == "POST" or session.get("reset", False):
-        id = session.get("id", "")
-        if not session.get("proces", False) and len(id) > 0:
-            ra = session["data"]["ra"]["deg"]
-            dec = session["data"]["dec"]["deg"]
-            coor = SkyCoord(ra, dec, unit=u.deg)
-            sky = "static/{}.fits.fz".format(id)
-            if os.path.exists(sky):
-                os.remove(sky)
-            art = artificial(coor, session.get("config", {}), id)
-            session["reset"] = False
-            sleep(1)
-            if art.poll() == 0 and not os.path.exists(sky):
-                flash("Can not create new artificial frame. " +
-                      "Have a look at debug page for more information. " +
-                      "Instead of staring at this not actual image.")
-                session["art"]["stdout"] = open("stdout.log", "r").read()
-                session.modified = True
-                return redirect("/debug")
+    if session.get("coord", False):
+        return redirect("/coord")
 
-            session["proces"] = True
-            session.modified = True
-            return render_template("proces.html")
-
-    if request.method == "GET":
-        id = session.get("id", "")
-        if session.get("proces", False) and len(id) > 0:
-            sky = "static/{}.fits.fz".format(id)
-            if os.path.exists(sky):
-                session["proces"] = False
-                session["art"]["stdout"] = open("stdout.log", "r").read()
-                session["png"] = fitspng(id)
-                session.modified = True
-                return redirect("/result")
-            return render_template("proces.html")
+    id = session.get("id", "")
+    if not len(id) > 0:
         return redirect("/index")
+    sky = "static/{}.fits.fz".format(id)
 
-    return redirect("/index")
+    if not session.get("proces", False) or session.get("reset", False):
+        ra = session["data"]["ra"]["deg"]
+        dec = session["data"]["dec"]["deg"]
+        coor = SkyCoord(ra, dec, unit=u.deg)
+        sky = "static/{}.fits.fz".format(id)
+        if os.path.exists(sky):
+            os.remove(sky)
+        art = artificial(coor, session.get("config", {}), id)
+        session.modified = True
+        sleep(1)
+        if art.poll() == 0 and not os.path.exists(sky):
+            flash("Can not create new artificial frame. " +
+                  "Have a look around this page for more information.")
+            session["art"]["stdout"] = open("stdout.log", "r").read()
+            session.modified = True
+            return redirect("/debug")
+        return render_template("proces.html")
+
+    if os.path.exists(sky):
+        session["proces"] = False
+        session["art"]["stdout"] = open("stdout.log", "r").read()
+        session["png"] = fitspng(id)
+        session.modified = True
+        return redirect("/result")
+
+    return render_template("proces.html")
 
 
 # -------------------------------------------------------------------------- #

@@ -21,12 +21,12 @@ else:
 past = time() - hist
 
 mask = "????????-????-????-????-????????????"
-cone = glob(os.path.join(path, "static", mask+".fits.gz"))
 fits = glob(os.path.join(path, "static", mask+".fits.fz"))
+cone = glob(os.path.join(path, "static", mask+".fits.gz"))
 pngs = glob(os.path.join(path, "static", mask+".png"))
 svgs = glob(os.path.join(path, "static", mask+".svg"))
 
-garbage = cone + fits + pngs + svgs
+garbage = fits + cone + pngs + svgs
 
 for waste in garbage:
     if os.path.getmtime(waste) < past:

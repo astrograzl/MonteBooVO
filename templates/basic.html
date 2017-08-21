@@ -20,10 +20,10 @@
       <a href="/" class="navbar-brand">MonteBooVO&trade;</a>
     </div>
     <ul class="navbar-nav nav">
-      <li><a href="about">About</a></li>
-      {% if session.get('data', False) != False %}
+      <li><a href="/about">About</a></li>
+      {% if session.get('data', {}).get('fit', False) != False %}
       <li>{# button visible only when data in session #}
-        <form action="result" method="GET" class="navbar-form">
+        <form action="/result" method="GET" class="navbar-form">
           <button type="submit" class="btn btn-success">
             Result {% if session.get('reset', False) %}
                    <span class="badge glyphicon glyphicon-refresh">
@@ -33,19 +33,20 @@
         </form>
       </li>
       {% endif %}
+      <li><a href="/stars">Stars</a></li>
       <li>{# symbol visible only when changes are made #}
-        <a href="config">
+        <a href="/config">
         Config {% if session.get('setin', 0) > 0 %}
                <span class="badge glyphicon glyphicon-cog">
                </span>
                {% endif %}
         </a>
       </li>
-      <li><a href="debug">Debug</a></li>
+      <li><a href="/debug">Debug</a></li>
       <li><a href="http://munipack.physics.muni.cz/artific.html" target="_blank">
         Help&nbsp;<span class="glyphicon glyphicon-share"></span></a></li>
     </ul>
-    <form action="/proces" method="POST" class="navbar-form navbar-right">
+    <form action="/coord" method="POST" class="navbar-form navbar-right">
       <input name="name" type="search" placeholder="Simbad search..." class="form-control">
       <input name="type" type="hidden" value="search">
     </form>
