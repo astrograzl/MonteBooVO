@@ -82,6 +82,7 @@ def proces():
             flash("Can not create new artificial frame. " +
                   "Have a look around this page for more information.")
             session["art"]["stdout"] = open("stdout.log", "r").read()
+            session["proces"] = False
             session.modified = True
             return redirect("/debug")
         return render_template("proces.html")
