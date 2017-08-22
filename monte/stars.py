@@ -26,7 +26,7 @@ def stars():
             plt.grid(True)
             plt.gca().invert_xaxis()
             plt.scatter(data["RAJ2000"], data["DEJ2000"],
-                        s=24**1/log(5*data["Vmag"]+5),
+                        s=32-10**-0.4*data["Vmag"],
                         c=data["Bmag"]-data["Vmag"])
             plt.savefig("static/{}.svg".format(id), bbox_inches="tight")
             session["data"]["svg"] = "static/{}.svg?{}".format(id, int(time()))

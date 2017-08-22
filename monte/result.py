@@ -11,7 +11,7 @@ from flask import session, redirect, render_template
 def result():
     """Show Result page with artificial frame."""
     if session.get("reset", False):
-        return redirect("/proces", code=307)
+        return redirect("/proces")
 
     if session.get("proces", False):
         return redirect("proces")
