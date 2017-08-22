@@ -6,8 +6,10 @@
 import os
 from time import time
 from flask import session, redirect, render_template
-from matplotlib import pyplot as plt
+from numpy import log
 from astropy.io import fits
+import matplotlib as mpl; mpl.use("Cairo")
+import matplotlib.pyplot as plt
 
 
 def stars():
@@ -24,7 +26,8 @@ def stars():
             plt.grid(True)
             plt.gca().invert_xaxis()
             plt.scatter(data["RAJ2000"], data["DEJ2000"],
-                        s=2**data["Vmag"]/1024, c=data["Jmag"]-data["Vmag"])
+                        s=24**1/log(5*data["Vmag"]+5),
+                        c=data["Bmag"]-data["Vmag"])
             plt.savefig("static/{}.svg".format(id), bbox_inches="tight")
             session["data"]["svg"] = "static/{}.svg?{}".format(id, int(time()))
             session.modified = True
