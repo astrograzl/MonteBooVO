@@ -6,8 +6,8 @@
 import os
 from time import time
 from flask import session, redirect, render_template
-from numpy import log
 from astropy.io import fits
+import numpy as np
 import matplotlib as mpl; mpl.use("Cairo")
 import matplotlib.pyplot as plt
 
@@ -15,18 +15,25 @@ import matplotlib.pyplot as plt
 def stars():
     """Plot star chart from catalogue data"""
     id = session.get("id", "")
+    svg = "static/{}.svg".format(id)
     sess = session.get("data", {})
+    if os.path.exists(svg):
+        return render_template("stars.html", data=sess)
     if sess.get("name", "Random") != "Random" and len(id) > 0:
         co = "static/{}.fits.gz".format(id)
         if os.path.exists(co):
             data = fits.getdata(co)
+            mask = np.isnan(data["Bmag"]) + np.isnan(data["Vmag"])
             plt.figure(figsize=(8, 8))
             plt.xlabel("$\\alpha$")
             plt.ylabel("$\\delta$")
             plt.grid(True)
             plt.gca().invert_xaxis()
+            plt.scatter(data["RAJ2000"][mask], data["DEJ2000"][mask],
+                        s=32*pow(10, 0.11*(13-data["f.mag"])),
+                        c="gray", alpha=0.75)  # ,marker="+")
             plt.scatter(data["RAJ2000"], data["DEJ2000"],
-                        s=32-10**-0.4*data["Vmag"],
+                        s=32*pow(10, 0.11*(13-data["f.mag"])),
                         c=data["Bmag"]-data["Vmag"])
             plt.savefig("static/{}.svg".format(id), bbox_inches="tight")
             session["data"]["svg"] = "static/{}.svg?{}".format(id, int(time()))
