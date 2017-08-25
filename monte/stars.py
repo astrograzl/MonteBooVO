@@ -35,7 +35,8 @@ def stars():
             plt.scatter(data["RAJ2000"], data["DEJ2000"],
                         s=32*pow(10, 0.11*(13-data["f.mag"])),
                         c=data["Bmag"]-data["Vmag"])
-            plt.savefig("static/{}.svg".format(id), bbox_inches="tight")
+            plt.savefig("static/{}.svg".format(id), bbox_inches="tight",
+                        transparent=True)
             session["data"]["svg"] = "static/{}.svg?{}".format(id, int(time()))
             session.modified = True
             return render_template("stars.html", data=session.get("data", {}))
