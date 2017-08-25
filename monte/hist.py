@@ -2,16 +2,23 @@
 # coding: utf-8
 """MonteBoo Virtual Observatory & Munipack Artificial Sky."""
 
-from .about import about
-from .coord import coord
-from .proces import proces
-from .result import result
-from .stars import stars
-from .config import config, reset, export
-from .hist import hist
+import os
+from glob import glob
+from random import choice
+from flask import redirect, render_template
 
 
-__all__ = [about, coord, stars, proces, result, config, reset, export, hist]
+def hist():
+    """Display overwiev of history to be forgotten."""
+    hist = glob("static/*.fits.gz")
+    while True:
+        fits = choice(hist)
+        sid = fits.rstrip(".fits.gz")
+        if os.path.exists(sid+".png") and\
+           os.path.exists(sid+".svg") and\
+           os.path.exists(sid+".fits.fz"):
+            return render_template("hist.html", sid=sid)
+    return redirect("/hist")
 
 
 # -------------------------------------------------------------------------- #

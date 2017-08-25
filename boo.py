@@ -79,6 +79,12 @@ def debug():
     return redirect("/index")
 
 
+@app.route("/hist")
+def hist():
+    """Display overwiev of history to be forgotten."""
+    return monte.hist()
+
+
 @app.errorhandler(404)
 def notfound(err):
     """Show Page Not Found."""

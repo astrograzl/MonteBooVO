@@ -1,0 +1,48 @@
+{% extends 'basic.html' %}
+
+{% block head %}
+<h2>History
+  <small>
+      Dear customer,
+  all of these will by lost soon.
+  You can downloud some of them,
+  if you wish, and help it to us.
+  </small>
+</h2>
+{% endblock head %}
+
+{% block content %}
+
+<table class="container">
+<tr class="row">
+  <td class="col-4-xs">
+    <p>
+      <img src="{{ sid }}.svg"
+          class="img-responsive">
+    </p>
+  </td>
+  <td class="col-4-xs text-center">
+    <p>
+      <a href="{{ sid }}.fits.gz"
+         class="btn btn-primary">
+         Download catalogue table
+      </a>
+    </p>
+    <p>
+      <a href="{{ sid }}.fits.fz"
+         class="btn btn-primary">
+         Download object image
+      </a>
+    </p>
+    <p><a href="/hist" class="btn btn-default">Next</a></p>
+  </td>
+  <td class="col-4-xs">
+    <p>
+      <img src="{{ sid }}.png"
+           class="img-responsive">
+    </p>
+  </td>
+</tr>
+</table>
+
+{% endblock content %}
