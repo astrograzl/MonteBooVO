@@ -79,10 +79,10 @@ def debug():
     return redirect("/index")
 
 
-@app.route("/hist")
-def hist():
+@app.route("/history")
+def history():
     """Display overwiev of history to be forgotten."""
-    return monte.hist()
+    return monte.history()
 
 
 @app.errorhandler(404)

@@ -8,10 +8,10 @@ from .proces import proces
 from .result import result
 from .stars import stars
 from .config import config, reset, export
-from .hist import hist
+from .history import history
 
 
-__all__ = [about, coord, stars, proces, result, config, reset, export, hist]
+__all__ = [about, coord, stars, proces, result, config, reset, export, history]
 
 
 # -------------------------------------------------------------------------- #

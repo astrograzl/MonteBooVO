@@ -10,7 +10,7 @@
   If you are in ugly trouble, call <em>The Doctor</em>!<br>
 </p>
 
-{% if session.get('cat') %}
+{% if session.get('cat', False) %}
 <section>
   <h3>Cone search</h3>
   <p>
@@ -21,7 +21,7 @@
 </section>
 {% endif %}
 
-{% if session.get('art') %}
+{% if session.get('art', False) %}
 <section>
   <h3>Artificial sky</h3>
   <p>
@@ -43,6 +43,7 @@
 </section>
 {% endif %}
 
+{% if session.get('data', False) %}
 <section>
   <h3>Data</h3>
   <code>id: {{ session['id'] }}</code><br>
@@ -50,15 +51,18 @@
     <code>{{ item }}: {{ session['data'][item] }}</code><br>
   {% endfor %}
 </section>
+{% endif %}
 
+{% if session.get('config', False) %}
 <section>
   <h3>Config</h3>
-  {% for item in session.get('config', {}) %}
+  {% for item in session.get('config') %}
   {% if session['config'][item] %}
     <code>{{ item }}: {{ session['config'][item] }}</code><br>
   {% endif %}
   {% endfor %}
 </section>
+{% endif %}
 
 
 {% endblock content %}

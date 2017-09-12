@@ -16,7 +16,7 @@ if len(sys.argv) == 3:
         sys.exit("Not a valid path to the directory")
 else:
     path = os.getcwd()
-    hist = 666  # 60 * 60 * 24 * 7
+    hist = 1  # 666  # 60 * 60 * 24 * 7
 
 past = time() - hist
 
