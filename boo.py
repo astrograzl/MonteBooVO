@@ -7,6 +7,7 @@ from secrets import token_urlsafe
 from flask import Flask, flash, session, redirect, render_template
 import monte
 
+
 app = Flask(__name__)
 app.secret_key = token_urlsafe(24)
 app.jinja_env.trim_blocks = True

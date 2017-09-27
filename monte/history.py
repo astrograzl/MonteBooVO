@@ -2,6 +2,7 @@
 # coding: utf-8
 """MonteBoo Virtual Observatory & Munipack Artificial Sky."""
 
+
 import os
 from glob import glob
 from random import choice
@@ -10,14 +11,14 @@ from flask import redirect, render_template
 
 def history():
     """Display overwiev of history to be forgotten."""
-    hist = glob("static/*.fits.gz")
+    hist = sorted(glob("static/*.svg"))
     assert len(hist) > 0, "You can make choice, only when you have any ;-)"
     while True:
-        fits = choice(hist)
-        sid = fits.rstrip(".fits.gz")
-        if os.path.exists(sid+".png") and\
-           os.path.exists(sid+".svg") and\
-           os.path.exists(sid+".fits.fz"):
+        svg = choice(hist)
+        sid = svg.rstrip(".svg")
+        if os.path.exists(sid+".fits.fz") and\
+           os.path.exists(sid+".fits.gz") and\
+           os.path.exists(sid+".png"):
             return render_template("history.html", sid=sid)
     return redirect("/history")
 

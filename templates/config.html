@@ -1,4 +1,4 @@
-{% from 'macro.j2' import field %}
+{% from 'macro.j2' import input, radio, check %}
 {% extends 'basic.html' %}
 
 {% block head %}
@@ -27,33 +27,52 @@
 
 <form method="POST">
 
-{% for item in default %}
-
-  {% if (loop.index % 2 == 1
-     and loop.index not in [23, 25])
-     or loop.index == 24 %}
-  <div class="row">
-  {% endif %}
-
-  {% if loop.index in [21, 22, 23] %}
-    {{ field(item, label=default[item]['label'],
-                   value=form[item],
-                   place=default[item]['place'],
-                   text=default[item]['text'], cols=4) }}
-  {% else %}
-    {{ field(item, label=default[item]['label'],
-                   value=form[item],
-                   place=default[item]['place'],
-                   text=default[item]['text'], cols=6) }}
-  {% endif %}
-
-  {% if (loop.index % 2 == 0
-     and loop.index not in [22, 24])
-     or loop.index in [23, 25] %}
-  </div>
-  {% endif %}
-
-{% endfor %}
+<div class="row">
+  {{ radio('psf', 'Point spread function', form.get('psf', ''), ['SEEING', 'MOFFAT', 'GAUSS'], 'seeing') }}
+  {{ radio('spread', 'Seeing spread method', form.get('spread', ''), ['FFT', 'RANDOM', 'AUTO'], 'fft') }}
+</div>
+<div class="row">
+  {{ input('hwhm', 'Half width at half of maximum', form.get('hwhm', ''), '1.00', 'pix', 4) }}
+  {{ input('airy', 'Radius of Airy spot', form.get('airy', ''), '0.10', 'pix', 4) }}
+  {{ input('beta', 'Moffat exponent', form.get('beta', ''), '2.00', '', 4) }}
+</div>
+<div class="row">
+  {{ input('maglim', 'Magnitude limit', form.get('maglim', ''), '13', '') }}
+  {{ input('sky-mag', 'Sky brightness', form.get('sky-mag', ''), '21', 'mag/arcsec<sup>2</sup>') }}
+</div>
+<div class="row">
+  {{ input('sky-grad-x', 'Sky change in x direction', form.get('sky-grad-x', ''), '0.0', 'mag/arcsec<sup>2</sup>/pix') }}
+  {{ input('sky-grad-y', 'Sky change in y direction', form.get('sky-grad-y', ''), '0.0', 'mag/arcsec<sup>2</sup>/pix') }}
+</div>
+<div class="row">
+  {{ input('area', 'Area of input aperture', form.get('area', ''), '1.00', 'm<sup>2</sup>') }}
+  {{ input('diameter', 'Diameter of input aperture', form.get('diameter', ''), '', 'm') }}
+</div>
+<div class="row">
+  {{ input('exptime', 'Exposure time', form.get('exptime', ''), '1.0', 's') }}
+  {{ input('qeff', 'Quantum efficiency', form.get('qeff', ''), '1.00', '') }}
+</div>
+<div class="row">
+  {{ check('atmosphere', 'Apply atmosphere modelling', form.get('atmosphere', ''), 'extinction+seeing') }}
+  {{ input('extk', 'Extinction coefficient', form.get('extk', ''), '0.00', '') }}
+</div>
+<div class="row">
+  {{ input('long', 'Geographic longitude of station (-east)', form.get('long', ''), '0.00', 'deg') }}
+  {{ input('lat', 'Geographic latitude of station (+north)', form.get('lat', ''), '0.00', 'deg') }}
+</div>
+<div class="row">
+  {{ input('date', 'Initial date', form.get('date', ''), '2000-01-01', 'YYYY-MM-DD') }}
+  {{ input('time', 'Initial time', form.get('time', ''), '00:00:00.000', 'HH:MM:SS') }}
+</div>
+<div class="row">
+  {{ input('fov', 'Field of view', form.get('fov', ''), '0.185', 'deg', 4) }}
+  {{ input('scale', 'Scale', form.get('scale', ''), '1/3600', 'deg/pix', 4) }}
+  {{ input('angle', 'Angle', form.get('angle', ''), '0.0', 'deg, clockwise positive', 4) }}
+</div>
+<div class="row">
+  {{ input('width', 'Width of output', form.get('width', ''), '666', 'pix') }}
+  {{ input('height', 'Height of output', form.get('height', ''), '666', 'pix') }}
+</div>
 
 <div class="row form-group">
   <div class="col-sm-6 text-right">

@@ -1,3 +1,7 @@
 .input-group-addon label {
   margin-bottom: 0;
 }
+
+sup {
+  font-size: small;
+}
